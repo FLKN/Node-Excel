@@ -1,18 +1,21 @@
 {
-  "name": "excel-export",
-  "version": "0.4.1",
+  "name": "node-excel",
+  "version": "0.5.0",
   "description": "Simple data set export to Excel xlsx file",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/main"
   },
-  "repository": "https://github.com/functionscope/Node-Excel-Export",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e-Construmarket/Node-Excel.git"
+  },
   "keywords": [
     "Excel",
     "xlsx"
   ],
-  "author": "Ber-Lin Lai <berlin.lai@gmail.com>",
-  "license": "BSD",
+  "author": "Rafael de Brito Fischer <rafaelfischer@gmail.com>",
+  "license": "UNLICENSED",
   "dependencies": {
     "collections": "^1.2.1",
     "node-zip": "1.x"
@@ -20,5 +23,13 @@
   "devDependencies": {
     "mocha": "",
     "should": ""
+  },
+  "bugs": {
+    "url": "https://github.com/e-Construmarket/Node-Excel/issues"
+  },
+  "homepage": "https://github.com/e-Construmarket/Node-Excel#readme",
+  "directories": {
+    "example": "example",
+    "test": "test"
   }
 }
