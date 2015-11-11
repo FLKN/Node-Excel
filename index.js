@@ -33,7 +33,8 @@ exports.execute = function (config) {
 	var cols = config.cols[0];
 	var dataCols = cols.data;
 	var colsLength = dataCols.length;
-	var dataRows = config.rows;
+	var jsonRows = config.rows;
+	var dataRows = null;
 	var xlsx = new JSZip(templateXLSX, { base64: true, checkCRC32: false });
 	var sheet = xlsx.file("xl/worksheets/sheet.xml");
 	var sharedStringsXml = xlsx.file("xl/sharedStrings.xml");
@@ -96,44 +97,47 @@ exports.execute = function (config) {
 	
 
 	//fill in data
-	var i, j, r, cellData, currRow, cellType, currCell, styleRowIndex,
-		dataLength = dataRows.length;
+	var i, j, r, cellData, currRow, cellType, currCell, styleCellIndex,
+		dataLength = jsonRows.length, styleCell, styleRow;
 	
 	for (i = 0; i < dataLength; i++) {
-		r = dataRows[i];
+		r = jsonRows[i];
+		styleRow = r.style;
+		r = r.data;
 		currRow = i + 3;
 
 		row = '<x:row r="' + currRow + '" spans="1:' + colsLength + '">';
 		for (j = 0; j < colsLength; j++) {
 			cellData = r[j];
 			currCell = dataCols[j];
+			styleCell = styleRow[j];
 
 			cellType = currCell.type;
-			styleRowIndex = (currCell.styleRowIndex || null);
+			styleCellIndex = (styleCell || currCell.styleRowIndex || null);
 			if (currCell.beforeCellWrite) {
 				var e = {
 					rowNum: currRow, 
-					styleRowIndex: null, 
+					styleCellIndex: null, 
 					cellType: cellType
 				};
 				cellData = currCell.beforeCellWrite(r, cellData, e);
-				styleRowIndex = (e.styleRowIndex || styleRowIndex);
+				styleCellIndex = (e.styleCellIndex || styleCellIndex);
 				cellType = e.cellType;
 				delete e;
 			}
 
 			switch (cellType) {
 				case 'number':
-					row += addNumberCol(getColumnLetter(j + 1) + currRow, cellData, styleRowIndex);
+					row += addNumberCol(getColumnLetter(j + 1) + currRow, cellData, styleCellIndex);
 					break;
 				case 'date':
-					row += addDateCol(getColumnLetter(j + 1) + currRow, cellData, styleRowIndex);
+					row += addDateCol(getColumnLetter(j + 1) + currRow, cellData, styleCellIndex);
 					break;
 				case 'bool':
-					row += addBoolCol(getColumnLetter(j + 1) + currRow, cellData, styleRowIndex);
+					row += addBoolCol(getColumnLetter(j + 1) + currRow, cellData, styleCellIndex);
 					break;
 				default:
-					row += addStringCol(getColumnLetter(j + 1) + currRow, cellData, styleRowIndex);
+					row += addStringCol(getColumnLetter(j + 1) + currRow, cellData, styleCellIndex);
 			}
 		}
 		row += '</x:row>';
