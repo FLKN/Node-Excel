@@ -109,7 +109,7 @@ exports.execute = function (config) {
             cellData = r[j];
             currCell = dataCols[j];
             styleCell = cellData.style;
-            cellData = cellData.data;
+            cellData = (cellData.data || '');
 
             cellType = currCell.type;
             styleCellIndex = (styleCell || currCell.styleRowIndex || null);
